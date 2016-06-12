@@ -1,5 +1,9 @@
 package ru.andreichernov.acicalc.math.converters;
 
+import ru.andreichernov.acicalc.math.MathObject;
+
+import java.util.List;
+
 public interface MathNotationConverter {
-    String convert(String infixExpression);
+    List<MathObject> convert2List(String infixExpression);
 }

@@ -1,18 +1,35 @@
 package ru.andreichernov.acicalc.validation;
 
+import org.slf4j.Logger;
+import ru.andreichernov.acicalc.cleaners.EmptyCharacterCleaner;
+import ru.andreichernov.acicalc.cleaners.ExpCleaner;
+import ru.andreichernov.acicalc.exception.ValidationException;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ExpressionValidatorSimpleImpl implements ExpressionValidator {
+    private static final Logger LOG = getLogger(ExpressionValidatorSimpleImpl.class);
+
     /**
      *
-     * @param expression подаваемое на вход математическое выражение
+     * @param expression математическое выражение
      * @return результат предварительной оценки выражения на корректность по заданному правилу
      */
     @Override
-    public boolean validate(String expression) {
-        boolean result = false;
+    public boolean validate(final String expression) {
+        boolean valid = false;
         if (expression != null && !expression.isEmpty()){
-            result = true;
+            // добавить проверку regex`ом на допустимость встречающихся знаков {+, -, *, /} и цифр входящих систем счисления..
+            // пока предполагается, что выражение корректно
+            valid = true;
         }
-// NumberFormatException
-        return result;
+        else {
+            try {
+                throw new ValidationException("No expression has been specified.");
+            } catch (ValidationException e) {
+                LOG.debug(e.getMessage());
+            }
+        }
+        return valid;
     }
 }

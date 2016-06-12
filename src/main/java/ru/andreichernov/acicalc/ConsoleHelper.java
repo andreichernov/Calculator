@@ -1,5 +1,6 @@
 package ru.andreichernov.acicalc;
 
+import org.slf4j.Logger;
 import ru.andreichernov.acicalc.exception.InterruptOperationException;
 
 import java.io.BufferedReader;
@@ -8,7 +9,11 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ConsoleHelper {
+    private static final Logger LOG = getLogger(ConsoleHelper.class);
+
     private static BufferedReader consoleReader = new BufferedReader(
             new InputStreamReader(System.in));
 
@@ -17,16 +22,19 @@ public class ConsoleHelper {
     }
 
     public static String readString() throws InterruptOperationException {
-        String message = "";
+        String readedString = "";
         try {
-            message = consoleReader.readLine();
-            if (message.equalsIgnoreCase("exit")) {
-                throw new InterruptOperationException();
+            readedString = consoleReader.readLine();
+            if (readedString.equalsIgnoreCase("exit")) {
+                String msg = "Data input was interrupted by user";
+                LOG.debug(msg);
+                throw new InterruptOperationException(msg);
             }
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
         }
-        return message;
+        return readedString;
     }
 
     static Operation askOperation() throws InterruptOperationException
@@ -35,10 +43,14 @@ public class ConsoleHelper {
         {
             writeMessage("choose operation: 1 - INFO, 2 - CALC, 3 - EXIT ->");
             String line = readString();
-            if (checkWithRegExp(line))
+            if (checkWithRegExp(line)){
                 return Operation.getAllowableOperationByOrdinal(Integer.parseInt(line));
-            else
-                writeMessage("invalid date");
+            }
+            else{
+                String msg = "Invalid operation";
+                LOG.error(msg);
+                writeMessage(msg);
+            }
         }
 
     }

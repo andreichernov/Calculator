@@ -1,4 +1,4 @@
-package ru.andreichernov.acicalc.math.solvers;
+package ru.andreichernov.acicalc.math.evaluator;
 
 import org.junit.Test;
 

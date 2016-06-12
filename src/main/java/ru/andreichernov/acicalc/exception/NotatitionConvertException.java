@@ -1,13 +1,13 @@
 package ru.andreichernov.acicalc.exception;
 
-public class InterruptOperationException extends Exception {
+public class NotatitionConvertException extends Exception{
     /**
      * This constructor takes a custom message as input.
      *
      * @param message
      *            A custom message for the exception to display.
      */
-    public InterruptOperationException(String message) {
+    public NotatitionConvertException(String message) {
         super(message);
     }
 
@@ -17,7 +17,7 @@ public class InterruptOperationException extends Exception {
      * @param exception
      *            An exception.
      */
-    public InterruptOperationException(Exception exception) {
+    NotatitionConvertException(Exception exception) {
         super(exception);
     }
 
@@ -29,7 +29,7 @@ public class InterruptOperationException extends Exception {
      * @param exception
      *            An exception.
      */
-    public InterruptOperationException(String message, Exception exception) {
+    NotatitionConvertException(String message, Exception exception) {
         super(message, exception);
     }
 }

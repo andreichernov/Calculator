@@ -1,13 +1,17 @@
 package ru.andreichernov.acicalc.command;
 
+import org.slf4j.Logger;
 import ru.andreichernov.acicalc.ConsoleHelper;
 import ru.andreichernov.acicalc.exception.InterruptOperationException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 class InfoCommand implements Command {
+    private static final Logger LOG = getLogger(InfoCommand.class);
 
     public void execute() throws InterruptOperationException {
-
+        LOG.info("In InfoCommand.");
         ConsoleHelper.writeMessage("Task description:\n" +
                 "\"We need a way to evaluate a arithmetic formula which contains 4 basic operations\n" +
                 "(+, -, *, /) and numbers in different numeric systems\n" +
