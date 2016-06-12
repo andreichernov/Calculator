@@ -1,7 +1,5 @@
 package ru.andreichernov.acicalc.math.evaluator;
 
-import ru.andreichernov.acicalc.math.MathObject;
-
 import java.util.List;
 
 public class PostfixExprEvaluator implements ExpEvaluator{
@@ -12,7 +10,7 @@ public class PostfixExprEvaluator implements ExpEvaluator{
     }
 
     @Override
-    public Double evaluate(List<MathObject> expression) {
+    public Double evaluate(List expression) {
         return null;
     }
 }

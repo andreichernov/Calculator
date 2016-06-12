@@ -20,7 +20,7 @@ public class Arabic extends BaseOperand{
         List<Integer> list = super.getNumber();
         StringBuilder stringBuilder = new StringBuilder();
         for (Integer aList : list) {
-            stringBuilder.append(aList);
+            stringBuilder.appendCodePoint(aList);
         }
         return Integer.parseInt(stringBuilder.toString());
     }

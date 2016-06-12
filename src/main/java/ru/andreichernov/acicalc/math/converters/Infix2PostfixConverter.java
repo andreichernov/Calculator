@@ -1,19 +1,17 @@
 package ru.andreichernov.acicalc.math.converters;
 
-import ru.andreichernov.acicalc.math.MathObject;
-import ru.andreichernov.acicalc.math.operand.Arabic;
+import ru.andreichernov.acicalc.exception.WrongExpression;
 import ru.andreichernov.acicalc.math.operand.BaseOperand;
 import ru.andreichernov.acicalc.math.operand.OperandHelper;
 import ru.andreichernov.acicalc.math.operator.Operator;
 import ru.andreichernov.acicalc.math.operator.OperatorsHelper;
-import ru.andreichernov.acicalc.math.splitters.SimpleExpressionSplitter;
 
 import java.util.*;
 
 public class Infix2PostfixConverter implements MathNotationConverter {
     private List<Operator> availableOperatorsList;
     private List<BaseOperand> availableOperandList;
-    private Stack<Double> operandStack = new Stack<>();
+    private Stack<BaseOperand> operandStack = new Stack<>();
     private Stack<Operator> operatorStack = new Stack<>();
 
     public Infix2PostfixConverter() {
@@ -22,25 +20,32 @@ public class Infix2PostfixConverter implements MathNotationConverter {
     }
 
     @Override
-    public List<MathObject> convert2List(String infixExpression) {
-
-        List<MathObject> resultPostfixList = null;
+    public List convert2List(String infixExpression) throws WrongExpression {
+        Stack<BaseOperand> tempOperandStack = new Stack<>();
+        Stack<Operator> tempOperatorStack = new Stack<>();
+        List resultPostfixList = new ArrayList();
         BaseOperand currentOperand = null;
         List<Integer> currentOperandCodepoints = new ArrayList<>();
         int expressionSize = infixExpression.length();
 
         boolean isNotationFound = false;
         for (int i = 0; i < expressionSize; i++) {
-            int readedCodepoint = infixExpression.codePointAt(i);
+            String s = infixExpression.substring(i, i + 1);
+            //int readedCodepoint = infixExpression.codePointAt(i);
+            int readedCodepoint = s.codePointAt(0);
             // Если codePoint прочитанного символа входит в одну из разрешенных систем счисления,
             // то запомним в какую систему счисления он входит
             if (!isNotationFound) {
                 for (int indexOfCurrNotation = 0; indexOfCurrNotation < availableOperandList.size(); indexOfCurrNotation++) {
-                    if (availableOperandList.get(i).isAvailableDigit(readedCodepoint)) {
-                        currentOperand = availableOperandList.get(i);// например Arabic
+                    if (availableOperandList.get(indexOfCurrNotation).isAvailableDigit(readedCodepoint)) {
+                        currentOperand = availableOperandList.get(indexOfCurrNotation);// например Arabic
                         currentOperandCodepoints.add(readedCodepoint);
                         isNotationFound = true;
-                    }
+                        break;
+                    } /*else {
+                        throw new WrongExpression("Bad character: " +
+                                (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
+                    }*/
                 }
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
                 if (currentOperand.isAvailableDigit(readedCodepoint)) {
@@ -50,27 +55,33 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                     // проверим оператор или нет
                     for (int j = 0; j < availableOperatorsList.size(); j++) {
                         if (availableOperatorsList.get(j).getCodepoint() == readedCodepoint) {
+
                             currentOperand.setNumber(currentOperandCodepoints);
                             currentOperand.saveValue(currentOperand.toDecimal());
-                            resultPostfixList.add((MathObject) currentOperand);
+
+                            tempOperandStack.push(currentOperand);
                             currentOperandCodepoints.clear();
                             isNotationFound = false;
 
-                            if (operatorStack.empty()){
-                                operatorStack.push(availableOperatorsList.get(j));
-                            }else{
-                                while(availableOperatorsList.get(j).getPrecedence() <= operatorStack.pop().getPrecedence())
-                                {
-                                    resultPostfixList.add((MathObject) operatorStack.pop());
+                            if (tempOperatorStack.empty()) {
+                                tempOperatorStack.push(availableOperatorsList.get(j));
+                            } else {
+                                while (availableOperatorsList.get(j).getPrecedence() <= tempOperatorStack.pop().getPrecedence()) {
+                                    tempOperatorStack.add(tempOperatorStack.pop());
                                 }
-                                operatorStack.push(availableOperatorsList.get(j));
+                                tempOperatorStack.push(availableOperatorsList.get(j));
                             }
+                            break;
+                        } else {
+                            throw new WrongExpression("Bad character: " +
+                                    (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
                         }
                     }
-
                 }
             }
         }
+        operandStack = (Stack<BaseOperand>) tempOperandStack.clone();
+        operatorStack = (Stack<Operator>) tempOperatorStack.clone();
         return resultPostfixList;
     }
 }
