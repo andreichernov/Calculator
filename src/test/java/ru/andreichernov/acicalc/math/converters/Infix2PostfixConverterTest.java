@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class Infix2PostfixConverterTest {
 
     @Test
-    public void convert2ListArabicSimple() throws Exception {
+    public void convert2ListArabicSimplePrecedence() throws Exception {
         MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
         String infix = "10*2+34";
         List<MathObject> postfixList = new ArrayList<>();
@@ -41,7 +41,34 @@ public class Infix2PostfixConverterTest {
     }
 
     @Test
-    public void convert2ListArabicDifficulr() throws Exception {
+    public void convert2ListArabicDifficultPrecedence() throws Exception {
+        MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
+        String infix = "10+2*3";
+        List<MathObject> postfixList = new ArrayList<>();// 10 2 3 * +
+
+        BaseOperand firstNumber = new Arabic();
+        firstNumber.saveDirect2Decimal(10);
+        postfixList.add(firstNumber);
+
+        BaseOperand secondNumber = new Arabic();
+        secondNumber.saveDirect2Decimal(2);
+        postfixList.add(secondNumber);
+
+        BaseOperand thirdNumber = new Arabic();
+        thirdNumber.saveDirect2Decimal(34);
+        postfixList.add(thirdNumber);
+
+        BaseOperator mult = new MultiplicationOperator();
+        postfixList.add(mult);
+
+        BaseOperator add = new AdditionOperator();
+        postfixList.add(add);
+
+        assertEquals(postfixList, mathNotationConverter.convert2List(infix));
+    }
+
+    @Test
+    public void convert2ListArabicHardPrecedence() throws Exception {
         MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
         String infix = "1+23*4-4*23+56/8-7+1000-500*2";
         // in postfix must be: 1 23 4 * + 4 23 * - 56 8 / + 7 - 1000 + 500 2 * -
