@@ -1,6 +1,7 @@
 package ru.andreichernov.acicalc.math.operator;
 
 public class SubtractionOperator extends BaseOperator {
+    // 45
     public SubtractionOperator() {
         super("-", 5, true);
     }

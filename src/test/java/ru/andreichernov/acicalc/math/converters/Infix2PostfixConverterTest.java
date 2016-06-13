@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class Infix2PostfixConverterTest {
 
     @Test
-    public void convert2ListArabicSimplePrecedence() throws Exception {
+    public void convert2ListArabicDirectPrecedence() throws Exception {
         MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
         String infix = "10*2+34";
         List<MathObject> postfixList = new ArrayList<>();
@@ -41,10 +41,11 @@ public class Infix2PostfixConverterTest {
     }
 
     @Test
-    public void convert2ListArabicDifficultPrecedence() throws Exception {
+    public void convert2ListArabicBackwardPrecedence() throws Exception {
         MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
-        String infix = "10+2*3";
-        List<MathObject> postfixList = new ArrayList<>();// 10 2 3 * +
+        String infix = "10+2*3-4";
+        //System.out.print("On input: [10, +, 2, *, 3, -, 4]");
+        List<MathObject> postfixList = new ArrayList<>();// 10 2 3 * + 4 -
 
         BaseOperand firstNumber = new Arabic();
         firstNumber.saveDirect2Decimal(10);
@@ -55,11 +56,53 @@ public class Infix2PostfixConverterTest {
         postfixList.add(secondNumber);
 
         BaseOperand thirdNumber = new Arabic();
-        thirdNumber.saveDirect2Decimal(34);
+        thirdNumber.saveDirect2Decimal(3);
         postfixList.add(thirdNumber);
 
         BaseOperator mult = new MultiplicationOperator();
         postfixList.add(mult);
+
+        BaseOperator add = new AdditionOperator();
+        postfixList.add(add);
+
+        BaseOperand fourthNumber = new Arabic();
+        fourthNumber.saveDirect2Decimal(4);
+        postfixList.add(fourthNumber);
+
+        BaseOperator sub = new SubtractionOperator();
+        postfixList.add(sub);
+
+        assertEquals(postfixList, mathNotationConverter.convert2List(infix));
+    }
+
+    @Test
+    public void convert2ListArabicMixPrecedence() throws Exception {
+        MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
+        String infix = "1*2+3*4";
+        //System.out.print("On input: [1, *, 2, +, 3, *, 4]");
+        List<MathObject> postfixList = new ArrayList<>();// 1 2 * 3 4 * +
+
+        BaseOperand firstNumber = new Arabic();
+        firstNumber.saveDirect2Decimal(1);
+        postfixList.add(firstNumber);
+
+        BaseOperand secondNumber = new Arabic();
+        secondNumber.saveDirect2Decimal(2);
+        postfixList.add(secondNumber);
+
+        BaseOperator mult = new MultiplicationOperator();
+        postfixList.add(mult);
+
+        BaseOperand thirdNumber = new Arabic();
+        thirdNumber.saveDirect2Decimal(3);
+        postfixList.add(thirdNumber);
+
+        BaseOperand fourthNumber = new Arabic();
+        fourthNumber.saveDirect2Decimal(4);
+        postfixList.add(fourthNumber);
+
+        BaseOperator mult2 = new MultiplicationOperator();
+        postfixList.add(mult2);
 
         BaseOperator add = new AdditionOperator();
         postfixList.add(add);

@@ -2,6 +2,7 @@ package ru.andreichernov.acicalc.math.operator;
 
 public class AdditionOperator extends BaseOperator {
     public AdditionOperator() {
+        // 43
         super("+", 5, true);
     }
 

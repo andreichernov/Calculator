@@ -40,7 +40,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             if (!isNotationFound) {
                 for (int indexOfCurrNotation = 0; indexOfCurrNotation < availableOperandList.size(); indexOfCurrNotation++) {
                     if (availableOperandList.get(indexOfCurrNotation).isIncludeCodepoint(readedCodepoint)) {
-                        try {
+                        try {// todo: возможно здесь убрать new
                             currentOperand = availableOperandList.get(indexOfCurrNotation).getClass().newInstance();// например Arabic
                         } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
@@ -73,7 +73,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                             if (operatorStack.empty()) {
                                 operatorStack.push(availableOperatorsList.get(j));
                             } else {
-                                while (!operatorStack.empty() || operatorStack.peek().getPrecedence()
+                                while (!operatorStack.empty() && operatorStack.peek().getPrecedence()
                                         >= availableOperatorsList.get(j).getPrecedence()) {
                                     try {
                                         postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
@@ -101,7 +101,9 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
             postfixList.add(currentOperand);
             try {
-                postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
+                while (!operatorStack.empty()){
+                    postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }

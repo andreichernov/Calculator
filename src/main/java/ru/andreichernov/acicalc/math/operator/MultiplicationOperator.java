@@ -1,6 +1,7 @@
 package ru.andreichernov.acicalc.math.operator;
 
 public class MultiplicationOperator extends BaseOperator {
+    // 42
     public MultiplicationOperator() {
         super("*", 6);
     }
