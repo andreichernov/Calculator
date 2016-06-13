@@ -1,6 +1,7 @@
 package ru.andreichernov.acicalc.math.operand;
 
 import org.slf4j.Logger;
+import ru.andreichernov.acicalc.math.MathObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class BaseOperand implements OperandConversion{
+public class BaseOperand implements OperandConversion, MathObject{
 
     private final Logger LOG = getLogger(this.getClass().getName());
     private List<Integer> valuesRangeList = new ArrayList<>();
@@ -39,7 +40,7 @@ public class BaseOperand implements OperandConversion{
         return convertationArray;
     }
 
-    public boolean isAvailableDigit(final int codepoint){
+    public boolean isIncludeCodepoint(final int codepoint){
         return valuesRangeList.contains(codepoint);
     }
 
@@ -56,7 +57,7 @@ public class BaseOperand implements OperandConversion{
         return Integer.MIN_VALUE;
     }
 
-    public void saveValue(int decimalValue){
+    public void saveDirect2Decimal(int decimalValue){
         this.value = decimalValue;
     }
 

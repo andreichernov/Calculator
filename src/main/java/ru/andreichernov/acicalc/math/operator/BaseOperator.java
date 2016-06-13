@@ -1,10 +1,11 @@
 package ru.andreichernov.acicalc.math.operator;
 
 import org.slf4j.Logger;
+import ru.andreichernov.acicalc.math.MathObject;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class BaseOperator implements Operator  {
+public class BaseOperator implements Operator, MathObject {
     private final Logger LOG = getLogger(this.getClass().getName());
 
     private String symbol = null;

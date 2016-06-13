@@ -1,6 +1,7 @@
 package ru.andreichernov.acicalc.math.converters;
 
 import ru.andreichernov.acicalc.exception.WrongExpression;
+import ru.andreichernov.acicalc.math.MathObject;
 import ru.andreichernov.acicalc.math.operand.BaseOperand;
 import ru.andreichernov.acicalc.math.operand.OperandHelper;
 import ru.andreichernov.acicalc.math.operator.Operator;
@@ -21,67 +22,81 @@ public class Infix2PostfixConverter implements MathNotationConverter {
 
     @Override
     public List convert2List(String infixExpression) throws WrongExpression {
+        List<MathObject> postfixList = new ArrayList<>();
         Stack<BaseOperand> tempOperandStack = new Stack<>();
         Stack<Operator> tempOperatorStack = new Stack<>();
-        List resultPostfixList = new ArrayList();
         BaseOperand currentOperand = null;
         List<Integer> currentOperandCodepoints = new ArrayList<>();
         int expressionSize = infixExpression.length();
 
         boolean isNotationFound = false;
+        boolean isOperatorFound = false;
         for (int i = 0; i < expressionSize; i++) {
-            String s = infixExpression.substring(i, i + 1);
             //int readedCodepoint = infixExpression.codePointAt(i);
+            String s = infixExpression.substring(i, i + 1);
             int readedCodepoint = s.codePointAt(0);
             // Если codePoint прочитанного символа входит в одну из разрешенных систем счисления,
             // то запомним в какую систему счисления он входит
             if (!isNotationFound) {
                 for (int indexOfCurrNotation = 0; indexOfCurrNotation < availableOperandList.size(); indexOfCurrNotation++) {
-                    if (availableOperandList.get(indexOfCurrNotation).isAvailableDigit(readedCodepoint)) {
+                    if (availableOperandList.get(indexOfCurrNotation).isIncludeCodepoint(readedCodepoint)) {
                         currentOperand = availableOperandList.get(indexOfCurrNotation);// например Arabic
                         currentOperandCodepoints.add(readedCodepoint);
                         isNotationFound = true;
+                        indexOfCurrNotation = availableOperandList.size();
                         break;
-                    } /*else {
-                        throw new WrongExpression("Bad character: " +
-                                (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
-                    }*/
+                    }else {
+                        if (isOperatorFound){
+                            throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Two operators " +
+                                    "consecutive.");
+                        }
+                    }
                 }
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
-                if (currentOperand.isAvailableDigit(readedCodepoint)) {
+                if (currentOperand.isIncludeCodepoint(readedCodepoint)) {
                     // Добавим codePointAt(i) в список формирования конечного операнда (т.к. операнд может состоять из нескольких символов)
                     currentOperandCodepoints.add(readedCodepoint);
                 } else { // если не входит, то это либо оператор, либо мусорный символ => исключение
                     // проверим оператор или нет
+                    currentOperand.setNumber(currentOperandCodepoints);
+                    currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
+                    postfixList.add(currentOperand);
+                    currentOperandCodepoints.clear();
+                    isNotationFound = false;
                     for (int j = 0; j < availableOperatorsList.size(); j++) {
                         if (availableOperatorsList.get(j).getCodepoint() == readedCodepoint) {
+                            isOperatorFound = true;
 
-                            currentOperand.setNumber(currentOperandCodepoints);
-                            currentOperand.saveValue(currentOperand.toDecimal());
-
-                            tempOperandStack.push(currentOperand);
-                            currentOperandCodepoints.clear();
-                            isNotationFound = false;
-
-                            if (tempOperatorStack.empty()) {
-                                tempOperatorStack.push(availableOperatorsList.get(j));
+                            if (operatorStack.empty()) {
+                                operatorStack.push(availableOperatorsList.get(j));
                             } else {
-                                while (availableOperatorsList.get(j).getPrecedence() <= tempOperatorStack.pop().getPrecedence()) {
-                                    tempOperatorStack.add(tempOperatorStack.pop());
+                                while (!operatorStack.empty() || operatorStack.peek().getPrecedence()
+                                        >= availableOperatorsList.get(j).getPrecedence()) {
+                                    postfixList.add((MathObject) operatorStack.pop());
+                                    if (operatorStack.empty()){
+                                        break;
+                                    }
                                 }
-                                tempOperatorStack.push(availableOperatorsList.get(j));
+                                operatorStack.push(availableOperatorsList.get(j));
                             }
+                            j = availableOperatorsList.size();
                             break;
-                        } else {
-                            throw new WrongExpression("Bad character: " +
-                                    (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
                         }
+                    }
+                    if (!isOperatorFound){
+                        throw new WrongExpression("Bad character: " +
+                                (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
                     }
                 }
             }
         }
-        operandStack = (Stack<BaseOperand>) tempOperandStack.clone();
-        operatorStack = (Stack<Operator>) tempOperatorStack.clone();
-        return resultPostfixList;
+        if (currentOperandCodepoints.size() > 0) {
+            currentOperand.setNumber(currentOperandCodepoints);
+            currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
+            postfixList.add(currentOperand);
+            currentOperandCodepoints.clear();
+            isNotationFound = false;
+        }
+        return postfixList;
     }
 }
