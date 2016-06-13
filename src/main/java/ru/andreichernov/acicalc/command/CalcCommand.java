@@ -5,13 +5,7 @@ import ru.andreichernov.acicalc.ConsoleHelper;
 import ru.andreichernov.acicalc.exception.InterruptOperationException;
 import ru.andreichernov.acicalc.exception.WrongExpression;
 import ru.andreichernov.acicalc.exception.WrongPostfixNotation;
-import ru.andreichernov.acicalc.math.Solver;
-import ru.andreichernov.acicalc.math.converters.Infix2PostfixConverter;
-import ru.andreichernov.acicalc.math.converters.MathNotationConverter;
-import ru.andreichernov.acicalc.math.evaluator.ExpEvaluator;
-import ru.andreichernov.acicalc.math.evaluator.PostfixExprEvaluator;
-import ru.andreichernov.acicalc.validation.ExpressionValidator;
-import ru.andreichernov.acicalc.validation.ExpressionValidatorSimpleImpl;
+import ru.andreichernov.acicalc.Solver;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

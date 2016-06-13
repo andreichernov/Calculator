@@ -1,7 +1,8 @@
 package ru.andreichernov.acicalc.math;
 
 import org.junit.Test;
-import ru.andreichernov.acicalc.math.operator.*;
+import ru.andreichernov.acicalc.Solver;
+import ru.andreichernov.acicalc.operator.*;
 
 import java.util.ArrayList;
 import java.util.List;
