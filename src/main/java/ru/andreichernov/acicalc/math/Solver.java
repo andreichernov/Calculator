@@ -41,7 +41,7 @@ public class Solver {
     }
 
 
-    public String solve(final String expression) throws WrongExpression, WrongPostfixNotation {
+    public String solve(final String expression) throws WrongExpression, WrongPostfixNotation, InstantiationException, IllegalAccessException {
         ExpCleaner expCleaner = new EmptyCharacterCleaner();
         String cleanedExpression = expCleaner.clean(expression);
 

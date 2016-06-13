@@ -57,6 +57,10 @@ public class BaseOperand implements OperandConversion, MathObject{
         this.number = new ArrayList<>(number);
     }
 
+    protected Integer[] getValuesCodepointArray() {
+        return valuesCodepointArray;
+    }
+
     @Override
     public int toDecimal() {
         return Integer.MIN_VALUE;
@@ -86,6 +90,14 @@ public class BaseOperand implements OperandConversion, MathObject{
     @Override
     public String toString() {
         return Integer.toString(value);
+    }
+
+    public static List<Integer> getCodePointsListFromString(String string){
+        List<Integer> listOfCodepoints = new ArrayList<>();
+        for (int i = 0; i < string.length(); i++) {
+            listOfCodepoints.add(string.codePointAt(i));
+        }
+        return listOfCodepoints;
     }
 }
 

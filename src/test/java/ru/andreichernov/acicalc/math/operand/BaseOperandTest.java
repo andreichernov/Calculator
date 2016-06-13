@@ -20,13 +20,8 @@ public class BaseOperandTest {
     @Test
     public void isAvailableDigitInRoman() throws Exception {
         BaseOperand baseOperand = new Roman();
-        int codepointOf0 = "0".codePointAt(0);
-        assertEquals(false, baseOperand.isIncludeCodepoint(codepointOf0));
-
         int codepointOfX = "X".codePointAt(0);
         assertEquals(true, baseOperand.isIncludeCodepoint(codepointOfX));
-
-
     }
 
 }

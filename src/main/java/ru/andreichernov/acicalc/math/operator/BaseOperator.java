@@ -49,6 +49,7 @@ public class BaseOperator implements Operator, MathObject {
         return unary;
     }
 
+    @Override
     public boolean equals(final Object object) {
         if (object == null) {
             return false;
@@ -66,6 +67,14 @@ public class BaseOperator implements Operator, MathObject {
         BaseOperator operator = (BaseOperator) object;
 
         return symbol.equals(operator.getSymbol());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = symbol.hashCode();
+        result = 31 * result + precedence;
+        result = 31 * result + (unary ? 1 : 0);
+        return result;
     }
 
     public String toString() {

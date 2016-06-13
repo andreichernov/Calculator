@@ -35,6 +35,10 @@ class CalcCommand implements Command {
             LOG.error("Wrong expression: \"" + wrongExpression + "\"");
         } catch (WrongPostfixNotation wrongPostfixNotation) {
             LOG.error("Wrong postfix notation: \"" + wrongPostfixNotation.toString() + "\"");
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
     }

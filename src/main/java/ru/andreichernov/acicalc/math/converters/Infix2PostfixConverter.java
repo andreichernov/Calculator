@@ -12,7 +12,6 @@ import java.util.*;
 public class Infix2PostfixConverter implements MathNotationConverter {
     private List<Operator> availableOperatorsList;
     private List<BaseOperand> availableOperandList;
-    private Stack<BaseOperand> operandStack = new Stack<>();
     private Stack<Operator> operatorStack = new Stack<>();
 
     public Infix2PostfixConverter() {
@@ -21,7 +20,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
     }
 
     @Override
-    public List convert2List(String infixExpression) throws WrongExpression {
+    public List convert2List(String infixExpression) throws WrongExpression, IllegalAccessException, InstantiationException {
         List<MathObject> postfixList = new ArrayList<>();
         Stack<BaseOperand> tempOperandStack = new Stack<>();
         Stack<Operator> tempOperatorStack = new Stack<>();
@@ -40,11 +39,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             if (!isNotationFound) {
                 for (int indexOfCurrNotation = 0; indexOfCurrNotation < availableOperandList.size(); indexOfCurrNotation++) {
                     if (availableOperandList.get(indexOfCurrNotation).isIncludeCodepoint(readedCodepoint)) {
-                        try {// todo: возможно здесь убрать new
-                            currentOperand = availableOperandList.get(indexOfCurrNotation).getClass().newInstance();// например Arabic
-                        } catch (InstantiationException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                        currentOperand = availableOperandList.get(indexOfCurrNotation).getClass().newInstance();// например Arabic
                         currentOperandCodepoints.add(readedCodepoint);
                         isNotationFound = true;
                         break;

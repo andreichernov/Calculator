@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ConsoleHelper {
     private static final Logger LOG = getLogger(ConsoleHelper.class);
 
+    // todo: возможно, для работы с разными кодировками заменить?
     private static BufferedReader consoleReader = new BufferedReader(
             new InputStreamReader(System.in));
 
@@ -25,7 +26,7 @@ public class ConsoleHelper {
         String readedString = "";
         try {
             readedString = consoleReader.readLine();
-            if (readedString.equalsIgnoreCase("exit")) {
+            if (readedString != null && readedString.equalsIgnoreCase("exit")) {
                 String msg = "Data input was interrupted by user";
                 LOG.debug(msg);
                 throw new InterruptOperationException(msg);
