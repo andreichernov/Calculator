@@ -72,7 +72,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                                     try {
                                         postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
                                     } catch (InstantiationException | IllegalAccessException e) {
-                                        e.printStackTrace();
+                                        e.printStackTrace();//todo: add logger
                                     }
                                     if (operatorStack.empty()){
                                         break;
@@ -99,7 +99,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                     postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
                 }
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                e.printStackTrace();//todo: add logger
             }
             currentOperandCodepoints.clear();
         }

@@ -16,7 +16,7 @@ public class ExpressionValidatorSimpleImpl implements ExpressionValidator {
      * @return результат предварительной оценки выражения на корректность по заданному правилу
      */
     @Override
-    public boolean validate(final String expression) {
+    public boolean validate(final String expression) {//todo: bad validation -> need improving!
         boolean valid = false;
         if (expression != null && !expression.isEmpty()){
             // добавить проверку regex`ом на допустимость встречающихся знаков {+, -, *, /} и цифр входящих систем счисления..

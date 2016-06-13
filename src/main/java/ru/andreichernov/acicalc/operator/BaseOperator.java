@@ -61,7 +61,7 @@ public class BaseOperator implements Operator, MathObject {
             }
         }
         catch (IllegalStateException e){
-            LOG.debug(e.getMessage());
+            LOG.debug(e.getMessage());//todo: change message
         }
 
         BaseOperator operator = (BaseOperator) object;
