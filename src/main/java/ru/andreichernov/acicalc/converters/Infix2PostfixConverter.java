@@ -4,6 +4,7 @@ import ru.andreichernov.acicalc.cleaners.EmptyCharacterCleaner;
 import ru.andreichernov.acicalc.cleaners.ExpCleaner;
 import ru.andreichernov.acicalc.exception.WrongExpression;
 import ru.andreichernov.acicalc.MathObject;
+import ru.andreichernov.acicalc.operand.Arabic;
 import ru.andreichernov.acicalc.operand.BaseOperand;
 import ru.andreichernov.acicalc.operand.OperandHelper;
 import ru.andreichernov.acicalc.operator.Operator;
@@ -33,7 +34,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
 
         boolean isNotationFound = false;
         boolean isOperatorFound = false;
-
+        boolean isDotAdded = false;
         for (int i = 0; i < expressionSize; i++) {
             //int readedCodepoint = infixExpression.codePointAt(i);
             String s = infixExpression.substring(i, i + 1);
@@ -50,18 +51,28 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                     }
                 }
                 if(!isNotationFound){
-                    throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Check operators " +
+                    throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Check expression for " +
                             "correctnes.");
                 }
 
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
+                if(currentOperand instanceof Arabic){
+                    if(readedCodepoint == ".".codePointAt(0) || readedCodepoint == ",".codePointAt(0)){
+                        if (isDotAdded){
+                            throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Check number for " +
+                                    "correctnes.");
+                        }
+                        currentOperandCodepoints.add(readedCodepoint);
+                        isDotAdded = true;
+                        continue;
+                    }
+                }
                 if (currentOperand.isIncludeCodepoint(readedCodepoint)) {
                     // Добавим codePointAt(i) в список формирования конечного операнда (т.к. операнд может состоять из нескольких символов)
                     currentOperandCodepoints.add(readedCodepoint);
-
-
                 } else { // если не входит, то это либо оператор, либо мусорный символ => исключение
                     // проверим оператор или нет
+
                     currentOperand.setNumber(currentOperandCodepoints);
                     currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
                     postfixList.add(currentOperand);
