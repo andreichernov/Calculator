@@ -61,7 +61,27 @@ public class BaseOperand implements OperandConversion, MathObject{
         this.value = decimalValue;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseOperand)) return false;
 
+        BaseOperand that = (BaseOperand) o;
+
+        return value == that.value;
+
+    }
+
+    @Override
+    public int hashCode() {
+        // как-то неправильно возможно
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
+    }
 }
 
 

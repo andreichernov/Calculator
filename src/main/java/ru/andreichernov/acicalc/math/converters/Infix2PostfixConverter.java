@@ -42,14 +42,11 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                     if (availableOperandList.get(indexOfCurrNotation).isIncludeCodepoint(readedCodepoint)) {
                         try {
                             currentOperand = availableOperandList.get(indexOfCurrNotation).getClass().newInstance();// например Arabic
-                        } catch (InstantiationException e) {
-                            e.printStackTrace();
-                        } catch (IllegalAccessException e) {
+                        } catch (InstantiationException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
                         currentOperandCodepoints.add(readedCodepoint);
                         isNotationFound = true;
-                        indexOfCurrNotation = availableOperandList.size();
                         break;
                     }else {
                         if (isOperatorFound){
@@ -78,14 +75,17 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                             } else {
                                 while (!operatorStack.empty() || operatorStack.peek().getPrecedence()
                                         >= availableOperatorsList.get(j).getPrecedence()) {
-                                    postfixList.add((MathObject) operatorStack.pop());//todo: add new obj
+                                    try {
+                                        postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
+                                    } catch (InstantiationException | IllegalAccessException e) {
+                                        e.printStackTrace();
+                                    }
                                     if (operatorStack.empty()){
                                         break;
                                     }
                                 }
-                                operatorStack.push(availableOperatorsList.get(j));//todo: add new obj
+                                operatorStack.push(availableOperatorsList.get(j));
                             }
-                            j = availableOperatorsList.size();
                             break;
                         }
                     }
@@ -100,9 +100,12 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             currentOperand.setNumber(currentOperandCodepoints);
             currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
             postfixList.add(currentOperand);
-            postfixList.add((MathObject) operatorStack.pop());
+            try {
+                postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
             currentOperandCodepoints.clear();
-            isNotationFound = false;
         }
         return postfixList;
     }
