@@ -34,7 +34,6 @@ public class Infix2PostfixConverter implements MathNotationConverter {
 
         boolean isNotationFound = false;
         boolean isOperatorFound = false;
-        boolean isDotAdded = false;
         for (int i = 0; i < expressionSize; i++) {
             //int readedCodepoint = infixExpression.codePointAt(i);
             String s = infixExpression.substring(i, i + 1);
@@ -56,17 +55,6 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                 }
 
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
-                if(currentOperand instanceof Arabic){
-                    if(readedCodepoint == ".".codePointAt(0) || readedCodepoint == ",".codePointAt(0)){
-                        if (isDotAdded){
-                            throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Check number for " +
-                                    "correctnes.");
-                        }
-                        currentOperandCodepoints.add(readedCodepoint);
-                        isDotAdded = true;
-                        continue;
-                    }
-                }
                 if (currentOperand.isIncludeCodepoint(readedCodepoint)) {
                     // Добавим codePointAt(i) в список формирования конечного операнда (т.к. операнд может состоять из нескольких символов)
                     currentOperandCodepoints.add(readedCodepoint);
