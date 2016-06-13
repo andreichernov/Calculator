@@ -33,6 +33,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
 
         boolean isNotationFound = false;
         boolean isOperatorFound = false;
+
         for (int i = 0; i < expressionSize; i++) {
             //int readedCodepoint = infixExpression.codePointAt(i);
             String s = infixExpression.substring(i, i + 1);
@@ -48,11 +49,17 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                         break;
                     }
                 }
+                if(!isNotationFound){
+                    throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "To many operators " +
+                            "consecutive.");
+                }
 
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
                 if (currentOperand.isIncludeCodepoint(readedCodepoint)) {
                     // Добавим codePointAt(i) в список формирования конечного операнда (т.к. операнд может состоять из нескольких символов)
                     currentOperandCodepoints.add(readedCodepoint);
+
+
                 } else { // если не входит, то это либо оператор, либо мусорный символ => исключение
                     // проверим оператор или нет
                     currentOperand.setNumber(currentOperandCodepoints);
@@ -69,12 +76,8 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                             } else {
                                 while (!operatorStack.empty() && operatorStack.peek().getPrecedence()
                                         >= availableOperatorsList.get(j).getPrecedence()) {
-                                    try {
-                                        postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
-                                    } catch (InstantiationException | IllegalAccessException e) {
-                                        e.printStackTrace();//todo: add logger
-                                    }
-                                    if (operatorStack.empty()){
+                                    postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
+                                    if (operatorStack.empty()) {
                                         break;
                                     }
                                 }
@@ -83,19 +86,23 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                             break;
                         }
                     }
-                    if (!isOperatorFound){
+                    if (!isOperatorFound) {
                         throw new WrongExpression("Bad character: " +
                                 (char) readedCodepoint + " in expression at " + (i + 1) + " position.");
                     }
+
                 }
             }
+
+
+
         }
         if (currentOperandCodepoints.size() > 0) {
             currentOperand.setNumber(currentOperandCodepoints);
             currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
             postfixList.add(currentOperand);
             try {
-                while (!operatorStack.empty()){
+                while (!operatorStack.empty()) {
                     postfixList.add((MathObject) operatorStack.pop().getClass().newInstance());
                 }
             } catch (InstantiationException | IllegalAccessException e) {

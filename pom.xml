@@ -27,6 +27,7 @@
             <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
+
         <!-- Logging with SLF4J & LogBack -->
         <dependency>
             <groupId>org.slf4j</groupId>

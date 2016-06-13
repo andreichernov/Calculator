@@ -1,8 +1,11 @@
 package ru.andreichernov.acicalc.evaluator;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import ru.andreichernov.acicalc.converters.Infix2PostfixConverter;
 import ru.andreichernov.acicalc.converters.MathNotationConverter;
+import ru.andreichernov.acicalc.exception.WrongExpression;
 
 import static org.junit.Assert.*;
 
@@ -59,4 +62,16 @@ public class PostfixExprEvaluatorTest {
         assertEquals(0, compareResult);
     }
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void evaluateInvalidRomanMixPrecedence() throws Exception {
+        MathNotationConverter mathNotationConverter = new Infix2PostfixConverter();
+        String infix = "X*+2*3-IV";
+
+        ExpEvaluator expEvaluator = new PostfixExprEvaluator();
+        thrown.expect(WrongExpression.class);
+        expEvaluator.evaluate(mathNotationConverter.convert2List(infix));
+    }
 }
