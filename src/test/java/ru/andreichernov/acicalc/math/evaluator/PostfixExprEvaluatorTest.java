@@ -6,6 +6,9 @@ import ru.andreichernov.acicalc.math.converters.MathNotationConverter;
 
 import static org.junit.Assert.*;
 
+/**
+ * Тесты класса вычисления постфиксного выражения
+ */
 public class PostfixExprEvaluatorTest {
     @Test
     public void evaluateArabicMixPrecedence() throws Exception {
