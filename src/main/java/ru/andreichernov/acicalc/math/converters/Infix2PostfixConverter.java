@@ -40,7 +40,13 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             if (!isNotationFound) {
                 for (int indexOfCurrNotation = 0; indexOfCurrNotation < availableOperandList.size(); indexOfCurrNotation++) {
                     if (availableOperandList.get(indexOfCurrNotation).isIncludeCodepoint(readedCodepoint)) {
-                        currentOperand = availableOperandList.get(indexOfCurrNotation);// например Arabic
+                        try {
+                            currentOperand = availableOperandList.get(indexOfCurrNotation).getClass().newInstance();// например Arabic
+                        } catch (InstantiationException e) {
+                            e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                         currentOperandCodepoints.add(readedCodepoint);
                         isNotationFound = true;
                         indexOfCurrNotation = availableOperandList.size();
@@ -72,12 +78,12 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                             } else {
                                 while (!operatorStack.empty() || operatorStack.peek().getPrecedence()
                                         >= availableOperatorsList.get(j).getPrecedence()) {
-                                    postfixList.add((MathObject) operatorStack.pop());
+                                    postfixList.add((MathObject) operatorStack.pop());//todo: add new obj
                                     if (operatorStack.empty()){
                                         break;
                                     }
                                 }
-                                operatorStack.push(availableOperatorsList.get(j));
+                                operatorStack.push(availableOperatorsList.get(j));//todo: add new obj
                             }
                             j = availableOperatorsList.size();
                             break;
@@ -94,6 +100,7 @@ public class Infix2PostfixConverter implements MathNotationConverter {
             currentOperand.setNumber(currentOperandCodepoints);
             currentOperand.saveDirect2Decimal(currentOperand.toDecimal());
             postfixList.add(currentOperand);
+            postfixList.add((MathObject) operatorStack.pop());
             currentOperandCodepoints.clear();
             isNotationFound = false;
         }
