@@ -16,6 +16,11 @@ public class BaseOperand implements OperandConversion, MathObject{
     private List<Integer> valuesRangeList = new ArrayList<>();
     private Integer[] valuesCodepointArray;
     private List<Integer> number;
+
+    public int getValue() {
+        return value;
+    }
+
     private int value;
 
 

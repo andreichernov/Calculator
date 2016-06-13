@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import ru.andreichernov.acicalc.ConsoleHelper;
 import ru.andreichernov.acicalc.exception.InterruptOperationException;
 import ru.andreichernov.acicalc.exception.WrongExpression;
+import ru.andreichernov.acicalc.exception.WrongPostfixNotation;
 import ru.andreichernov.acicalc.math.Solver;
 import ru.andreichernov.acicalc.math.converters.Infix2PostfixConverter;
 import ru.andreichernov.acicalc.math.converters.MathNotationConverter;
@@ -32,6 +33,8 @@ class CalcCommand implements Command {
             ConsoleHelper.writeMessage(solver.solve(expression));
         } catch (WrongExpression wrongExpression) {
             LOG.error("Wrong expression: \"" + wrongExpression + "\"");
+        } catch (WrongPostfixNotation wrongPostfixNotation) {
+            LOG.error("Wrong postfix notation: \"" + wrongPostfixNotation.toString() + "\"");
         }
 
     }

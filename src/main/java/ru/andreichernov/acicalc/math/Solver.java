@@ -5,6 +5,7 @@ import ru.andreichernov.acicalc.cleaners.EmptyCharacterCleaner;
 import ru.andreichernov.acicalc.cleaners.ExpCleaner;
 import ru.andreichernov.acicalc.exception.NotatitionConvertException;
 import ru.andreichernov.acicalc.exception.WrongExpression;
+import ru.andreichernov.acicalc.exception.WrongPostfixNotation;
 import ru.andreichernov.acicalc.math.converters.Infix2PostfixConverter;
 import ru.andreichernov.acicalc.math.converters.MathNotationConverter;
 import ru.andreichernov.acicalc.math.evaluator.ExpEvaluator;
@@ -40,7 +41,7 @@ public class Solver {
     }
 
 
-    public String solve(final String expression) throws WrongExpression {
+    public String solve(final String expression) throws WrongExpression, WrongPostfixNotation {
         ExpCleaner expCleaner = new EmptyCharacterCleaner();
         String cleanedExpression = expCleaner.clean(expression);
 
