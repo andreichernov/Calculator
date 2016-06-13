@@ -3,6 +3,7 @@ package ru.andreichernov.acicalc;
 
 import org.slf4j.Logger;
 import ru.andreichernov.acicalc.command.CommandExecutor;
+import ru.andreichernov.acicalc.exception.InterruptOperationException;
 
 import java.util.Locale;
 
@@ -19,7 +20,7 @@ public class Calculator {
                 operation = ConsoleHelper.askOperation();
                 CommandExecutor.execute(operation);
             } while (operation != Operation.EXIT);
-        } catch (Exception e) {
+        } catch (InterruptOperationException e) {
             LOG.error(e.getMessage());
         }
     }

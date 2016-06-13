@@ -50,8 +50,8 @@ public class Infix2PostfixConverter implements MathNotationConverter {
                     }
                 }
                 if(!isNotationFound){
-                    throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "To many operators " +
-                            "consecutive.");
+                    throw new WrongExpression("Wrong expression at : " + (i + 1) + " position. " + "Check operators " +
+                            "correctnes.");
                 }
 
             } else { // если система счисления уже была найдена, то уже сразу проверяем входит ли codepoint в нее
